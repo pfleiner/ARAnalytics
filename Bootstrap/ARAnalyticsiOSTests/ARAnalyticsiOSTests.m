@@ -166,6 +166,15 @@ describe(@"ARAnalytics API", ^{
                 [ARAnalytics finishTimingEvent:event withProperties:properties];
             }).to.raise(nil);
         });
+        xit(@"is smart about adding the length to properties with a custom length key", ^{
+            NSString *event = @"curler 2";
+            NSDictionary *properties = @{ @"Duration" : @"122" };
+            [ARAnalyticalProvider setLengthKey:@"Duration"];
+            [ARAnalytics startTimingEvent:event];
+            expect(^{
+                [ARAnalytics finishTimingEvent:event withProperties:properties];
+            }).to.raise(nil);
+        });
     });
     
     describe(@"Logging", ^{

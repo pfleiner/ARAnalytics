@@ -9,11 +9,19 @@
 #import <Foundation/Foundation.h>
 #import "ARAnalyticalProvider.h"
 
-static NSString *const ARTimingEventLengthKey = @"length";
+static NSString *const ARTimingEventDefaultLengthKey = @"length";
+static NSString * ARTimingEventLengthKey;
 
 @implementation ARAnalyticalProvider
 
++ (void)setLengthKey:(NSString *)lengthKey {
+  ARTimingEventLengthKey = lengthKey;
+}
+
 - (id)initWithIdentifier:(NSString *)identifier {
+    if (!ARTimingEventLengthKey) {
+        ARTimingEventLengthKey = ARTimingEventDefaultLengthKey;
+    }
     return [super init];
 }
 

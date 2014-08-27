@@ -9,6 +9,8 @@
 @class UINavigationController, UIViewController;
 @interface ARAnalyticalProvider : NSObject
 
++ (void)setLengthKey:(NSString *)lengthKey;
+
 /// Init
 - (id)initWithIdentifier:(NSString *)identifier;
 
