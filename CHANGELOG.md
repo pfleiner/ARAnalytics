@@ -1,9 +1,35 @@
 #ARAnalytics
 
-## Next
+## Version 3.0.1
+
+* Fixes `+[GAIDictionaryBuilder createAppView]` deprecation warings ( @sodastsai )
+
+## Version 3.0.0
+
+* Changes to DSL to allow for multiple hooks per class hierarchy ( @ashfurrow )
+* Removes TestFlight ( @ashfurrow )
+* Removed deprecated methods from 2.x.x ( @orta )
+* Added support for Snowplow analytics ( @orta )
+* Added super properties that get sent with all event methods ( @orta )
+* Added support for AppsFlyer ( thanks @cdzombak )
+* Added support for Branch.io ( thanks @scotthasbrouck )
+* Updated Adjust provider to support Adjust 4.0 ( thanks @HeEAaD )
+* Fixes warnings generated from ARNavigationControllerDelegateProxy (thanks @ashfurrow )
+
+## Version 2.9.0
+
+* Added Adjust provider ( thanks @ekurutepe )
+* Added Yandex Mobile Metrica provider ( thanks @BamX )
+* Stopped pinning to a specific Hockey version ( @orta )
+* Updated to use official Parse Pod ( thanks @kylef )
+* Added a getter for providers ( thanks @sodastsai )
+* Setting user id for Google Analytics ( thanks @glentregoning, @janj - Indiegogo)
+
+## Version 2.8.0
 
 * Added `ARAnalyticsSelector` for use with DSL ( thanks @AshFurrow )
 * Added a new provider, Segment.io (server-side only) ( thanks @wka )
+* Added custom metrics to GAI ( thanks @briomusic )
 
 ## Version 2.7.2
 * Add support for CocoaDocs colours
@@ -113,7 +139,7 @@
 
 * Support for Countly
 * Rewrite into a more modular codebase
-* Supports more features of Google Analytics 
+* Supports more features of Google Analytics
 * Supports using custom Mixpanel URLS ( thanks gabrielrinaldi )
 
 ## Version 1.0

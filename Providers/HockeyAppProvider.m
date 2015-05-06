@@ -1,11 +1,3 @@
-//
-//  HockeyAppProvider.m
-//  
-//
-//  Created by Daniel Haight on 16/08/2013.
-//
-//
-
 #import "HockeyAppProvider.h"
 #import <HockeySDK/HockeySDK.h>
 
@@ -56,8 +48,15 @@
 #pragma mark - BITUpdateManagerDelegate
 - (NSString *)customDeviceIdentifierForUpdateManager:(BITUpdateManager *)updateManager {
 #ifdef DEBUG
-    if ([[UIDevice currentDevice] respondsToSelector:@selector(uniqueIdentifier)])
+
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wundeclared-selector"
+
+    if ([[UIDevice currentDevice] respondsToSelector:@selector(uniqueIdentifier)]){
         return [[UIDevice currentDevice] performSelector:@selector(uniqueIdentifier)];
+    }
+#pragma clang diagnostic pop
+    
 #endif
     return nil;
 }

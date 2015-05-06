@@ -1,14 +1,8 @@
-//
-//  LocalyticsProvider.m
-//  ARAnalyticsTests
-//
-//  Created by orta therox on 05/01/2013.
-//  Copyright (c) 2013 Orta Therox. All rights reserved.
-//
-
 #import "LocalyticsProvider.h"
-#import "LocalyticsSession.h"
 
+#ifdef AR_LOCALYTICS_EXISTS
+#import "LocalyticsSession.h"
+#endif
 @interface LocalyticsProvider ()
 
 - (void) startLocalytics;
@@ -23,8 +17,9 @@
     NSAssert([LocalyticsSession class], @"Localytics is not included");
 
     if( ( self = [super init] ) ) {
-        [[LocalyticsSession sharedLocalyticsSession] startSession:identifier];
-
+        
+        [[LocalyticsSession sharedLocalyticsSession] LocalyticsSession:identifier];
+        
         for( NSString *activeEvent in @[ UIApplicationDidBecomeActiveNotification, 
                                          UIApplicationWillEnterForegroundNotification ]) {
             [[NSNotificationCenter defaultCenter] addObserver:self
@@ -48,7 +43,7 @@
 
 - (void)identifyUserWithID:(NSString *)userID andEmailAddress:(NSString *)email {
     if (userID) {
-        [[LocalyticsSession sharedLocalyticsSession] setCustomerName:userID];
+        [[LocalyticsSession sharedLocalyticsSession] setCustomerId:userID];
     }
 
     if (email) {
@@ -57,7 +52,6 @@
 }
 
 -(void)setUserProperty:(NSString *)property toValue:(NSString *)value {
-    // This is for enterprise only...
     [[LocalyticsSession sharedLocalyticsSession] setValueForIdentifier:property value:value];
 }
 
@@ -66,7 +60,6 @@
 }
 
 - (void)didShowNewPageView:(NSString *)pageTitle {
-    // This is for enterprise only...
     [[LocalyticsSession sharedLocalyticsSession] tagScreen:pageTitle];
 }
 
@@ -77,7 +70,7 @@
 #pragma mark - Localytics events
 
 - (void)startLocalytics {
-    [[LocalyticsSession sharedLocalyticsSession] resume];
+    [[LocalyticsSession sharedLocalyticsSession] open];
     [[LocalyticsSession sharedLocalyticsSession] upload];
 }
 

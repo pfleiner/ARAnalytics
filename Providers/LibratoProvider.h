@@ -1,17 +1,10 @@
-//
-//  LibratoProvider.h
-//  Pods
-//
-//  Created by Param Aggarwal on 24/07/2014.
-//
-//
-
 #import "ARAnalyticalProvider.h"
 
 // Whilst we do not include the Librato library
 // as it is not an official one
 // we can stub out the implementation with methods we want
 // so that it will link with the real framework later on ./
+
 #ifdef AR_LIBRATO_EXISTS
 
 @interface Librato : NSObject

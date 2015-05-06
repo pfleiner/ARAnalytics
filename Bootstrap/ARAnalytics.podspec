@@ -2,10 +2,11 @@ Pod::Spec.new do |s|
   s.name         =  'ARAnalytics'
   s.version      =  '3.0.0'
   s.license      =  {:type => 'MIT', :file => 'LICENSE' }
+  s.summary      =  'Use multiple major analytics platforms with one clean API.'
   s.homepage     =  'https://github.com/orta/ARAnalytics'
   s.authors      =  { 'orta' => 'orta.therox@gmail.com', 'Daniel Haight' => "confidence.designed@gmail.com" }
   s.source       =  { :git => 'https://github.com/orta/ARAnalytics.git', :tag => s.version.to_s }
-  s.ios.deployment_target = "7.0"
+  s.ios.deployment_target = "6.0"
   s.osx.deployment_target = "10.7"
   s.social_media_url = "https://twitter.com/orta"
   s.requires_arc =  true
@@ -34,6 +35,7 @@ Pod::Spec.new do |s|
   yandex         = { :spec_name => "YandexMobileMetrica", :dependency => "YandexMobileMetrica" }
   adjust         = { :spec_name => "Adjust",              :dependency => "Adjust" }
   librato        = { :spec_name => "Librato" }
+  testflight_sdk = { :spec_name => "TestFlight",          :dependency => ["TestFlightSDK", "BPXLUUIDHandler"] }
   crashlytics    = { :spec_name => "Crashlytics" }
   appsflyer      = { :spec_name => "AppsFlyer",           :dependency => "AppsFlyer-SDK" }
   branch         = { :spec_name => "Branch",              :dependency => "Branch" }
@@ -43,27 +45,27 @@ Pod::Spec.new do |s|
 # countly_mac     = { :spec_name => "CountlyOSX",      :dependency => "Countly",                :osx => true,  :provider => "Countly" }
   mixpanel_mac    = { :spec_name => "MixpanelOSX",     :dependency => "Mixpanel-OSX-Community", :osx => true,  :provider => "Mixpanel"}
 
-  $all_analytics = [mixpanel, localytics, flurry, google, kissmetrics, crittercism, crashlytics, bugsnag, countly, helpshift,kissmetrics_mac, mixpanel_mac, tapstream, newRelic, amplitude, hockeyApp, parseAnalytics, heap, chartbeat, umeng, librato, segmentio, swrve, yandex, adjust, appsflyer, branch, snowplow]
+  $all_analytics = [testflight_sdk, mixpanel, localytics, flurry, google, kissmetrics, crittercism, crashlytics, bugsnag, countly, helpshift,kissmetrics_mac, mixpanel_mac, tapstream, newRelic, amplitude, hockeyApp, parseAnalytics, heap, chartbeat, umeng, librato, segmentio, swrve, yandex, adjust, appsflyer, branch, snowplow]
 
   # To make the pod spec API cleaner, subspecs are "iOS/KISSmetrics"
 
   s.subspec "CoreMac" do |ss|
     ss.source_files = ['*.{h,m}', 'Providers/ARAnalyticalProvider.{h,m}', 'Providers/ARAnalyticsProviders.h']
-    ss.exclude_files = ['ARDSL.{h,m}', 'ARNavigationControllerDelegateProxy.{h,m}']
-    ss.platform = :osx
+    ss.exclude_files = ['ARDSL.{h,m}']
+    ss.platforms = [:osx]
   end
 
   s.subspec "CoreIOS" do |ss|
     ss.source_files = ['*.{h,m}', 'Providers/ARAnalyticalProvider.{h,m}', 'Providers/ARAnalyticsProviders.h']
     ss.exclude_files = ['ARDSL.{h,m}']
     ss.private_header_files = 'ARNavigationControllerDelegateProxy.h'
-    ss.platform = :ios
+    ss.platforms = [:ios]
   end
 
   s.subspec "DSL" do |ss|
     ss.source_files = ['*.{h,m}', 'ARDSL.{h,m}', 'Providers/ARAnalyticalProvider.{h,m}', 'Providers/ARAnalyticsProviders.h']
-    ss.dependency 'RSSwizzle', '~> 0.1.0'
-    ss.dependency 'ReactiveCocoa', '~> 2.0'
+    ss.dependency 'Aspects', '~> 1.3.1'
+    ss.platforms = [:ios, :osx]
   end
 
   # for the description
@@ -89,13 +91,13 @@ Pod::Spec.new do |s|
       if analytics_spec[:osx]
         ss.osx.source_files = sources
         ss.dependency 'ARAnalytics/CoreMac'
-        ss.platform = :osx
+        ss.platforms = [:osx]
         $all_osx_names << providername
 
       else
         ss.ios.source_files = sources
         ss.dependency 'ARAnalytics/CoreIOS'
-        ss.platform = :ios
+        ss.platforms = [:ios]
         $all_ios_names << providername
       end
 

@@ -1,11 +1,3 @@
-//
-//  GoogleProvider.m
-//  ARAnalyticsTests
-//
-//  Created by orta therox on 05/01/2013.
-//  Copyright (c) 2013 Orta Therox. All rights reserved.
-//
-
 #import "GoogleAnalyticsProvider.h"
 #import "ARAnalyticsProviders.h"
 #import "GAI.h"
@@ -48,12 +40,13 @@
 }
 
 - (void)identifyUserWithID:(NSString *)userID andEmailAddress:(NSString *)email {
-    // Not allowed in GA
+    // The Google Analytics Terms of Service prohibit sending of any personally identifiable information (PII) to Google Analytics servers. For more information, please consult the Terms of Service.
     // https://developers.google.com/analytics/devguides/collection/ios/v3/customdimsmets#pii
 
-    // The Google Analytics Terms of Service prohibit sending of any personally identifiable information (PII) to Google Analytics servers. For more information, please consult the Terms of Service.
-
     // Ideally we would put an assert here but if you have multiple providers that wouldn't make sense.
+
+    // However setting of a User ID is allowed as per https://developers.google.com/analytics/devguides/collection/ios/v3/user-id .
+    [self setUserProperty:@"&uid" toValue:userID];
 }
 
 - (void)setUserProperty:(NSString *)property toValue:(NSString *)value {
@@ -67,7 +60,7 @@
     }
     
 #ifdef DEBUG
-    [self warnAboutIgnoredProperies:properties];
+    [self warnAboutIgnoredProperties:properties];
 #endif
     
     GAIDictionaryBuilder *builder = [GAIDictionaryBuilder createEventWithCategory:category
@@ -84,14 +77,29 @@
             [newProperties setObject:potentialValue forKey:self.customDimensionMappings[key]];
         }
     }
-    
+
+    // adding custom Metric values if we can find a key in the mappings
+    for (NSString *key in self.customMetricMappings.allKeys) {
+        NSString *potentialValue = properties[key];
+        if (potentialValue) {
+            [newProperties setObject:potentialValue forKey:self.customMetricMappings[key]];
+        }
+    }
+
     [self.tracker send:newProperties];
 }
 
 - (void)didShowNewPageView:(NSString *)pageTitle {
     [self event:@"Screen view" withProperties:@{ @"label": pageTitle }];
     [self.tracker set:kGAIScreenName value:pageTitle];
-    [self.tracker send:[[GAIDictionaryBuilder createAppView] build]];
+    if ([GAIDictionaryBuilder respondsToSelector:@selector(createScreenView)]) {
+        [self.tracker send:[[GAIDictionaryBuilder createScreenView] build]];
+    } else {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+        [self.tracker send:[[GAIDictionaryBuilder createAppView] build]];
+#pragma clang diagnostic pop
+    }
 }
 
 - (void)logTimingEvent:(NSString *)event withInterval:(NSNumber *)interval  properties:(NSDictionary *)properties{
@@ -123,7 +131,7 @@
 
 #pragma mark - Warnings
 
--(void) warnAboutIgnoredProperies:(NSDictionary*)propertiesDictionary
+- (void)warnAboutIgnoredProperties:(NSDictionary*)propertiesDictionary
 {
     for (id key in propertiesDictionary) {
         if (    [key isEqualToString:[NSDictionary googleAnalyticsLabelKey]] ||
