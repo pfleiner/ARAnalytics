@@ -80,7 +80,7 @@ static SEL ar_selectorForScreenAnalyticsDetails (NSDictionary *dictionary, Class
             [[instance rac_signalForSelector:selector] subscribeNext:^(RACTuple *parameters) {
                 id instance = weakInstance;
 
-                BOOL shouldFire = ar_shouldFireForInstance(object, instance, parameters);
+                BOOL shouldFire = ar_shouldFireForInstance(eventDictionary, instance, parameters);
 
                 if (shouldFire) {
                     NSDictionary *properties;
@@ -117,7 +117,7 @@ static SEL ar_selectorForScreenAnalyticsDetails (NSDictionary *dictionary, Class
             [[instance rac_signalForSelector:selector] subscribeNext:^(RACTuple *parameters) {
                 id instance = weakInstance;
 
-                BOOL shouldFire = ar_shouldFireForInstance(object, instance, parameters);
+                BOOL shouldFire = ar_shouldFireForInstance(screenDictionary, instance, parameters);
 
                 if (shouldFire) {
                     NSString *pageName;
